@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: soccer_chat_api_web
+    build: .
+    command: uvicorn API.main:app --host 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/soccer_chat
+    depends_on:
+      - db
+  db:
+    container_name: soccer_chat_api_db
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=soccer_chat
+
+volumes:
+  postgres_data:
